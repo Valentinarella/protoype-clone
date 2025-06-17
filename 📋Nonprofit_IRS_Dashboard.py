@@ -6,14 +6,19 @@ import plotly.graph_objects as go
 # Page configuration
 st.set_page_config(page_title="Environmental Nonprofit Insights", layout="wide", initial_sidebar_state="expanded")
 
-# Custom CSS for better styling
+# Custom CSS for improved styling and new color scheme
 st.markdown("""
     <style>
-    .main {background-color: #f5f9f5;}
-    .stSidebar {background-color: #e8f0e8;}
-    .stMetric {background-color: #ffffff; border-radius: 8px; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);}
-    .stButton>button {background-color: #2e7d32; color: white; border-radius: 5px;}
-    h1, h2, h3 {color: #1b5e20;}
+    .main {background-color: #f6f8f6;}
+    .stSidebar {background-color: #e8ece8;}
+    .stMetric {background-color: #ffffff; border-radius: 8px; padding: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);}
+    .stButton>button {background-color: #3a6b35; color: #ffffff; border-radius: 6px; border: none; padding: 8px 16px;}
+    .stButton>button:hover {background-color: #4a8a44;}
+    h1, h2, h3 {color: #2e4d2a;}
+    .stTabs [data-baseweb="tab"] {color: #4a7043; font-weight: 500;}
+    .stTabs [data-baseweb="tab"][aria-selected="true"] {color: #3a6b35; border-bottom: 2px solid #3a6b35;}
+    .stSelectbox, .stMultiSelect {background-color: #ffffff; border: 1px solid #c8d4c7; border-radius: 4px;}
+    .stExpander {background-color: #ffffff; border: 1px solid #e0e6e0; border-radius: 6px;}
     </style>
 """, unsafe_allow_html=True)
 
@@ -113,7 +118,7 @@ with tab1:
         y="State",
         orientation="h",
         color="Total Revenue",
-        color_continuous_scale="Viridis",
+        color_continuous_scale=[(0, "#a3c9a8"), (0.5, "#6b9b76"), (1, "#3a6b35")],
         text="Total Revenue",
         height=400,
     )
@@ -137,7 +142,7 @@ with tab2:
         names="Expense Type",
         values="Amount ($)",
         color="Expense Type",
-        color_discrete_map={"Program Expenses": "#2e7d32", "Administrative Expenses": "#81c784"},
+        color_discrete_map={"Program Expenses": "#3a6b35", "Administrative Expenses": "#a3c9a8"},
         height=400,
     )
     fig_pie.update_traces(textinfo="percent+label", pull=[0.1, 0])
@@ -163,13 +168,14 @@ with tab3:
             r=values + [values[0]],
             theta=["Assets", "Revenue", "Expenses"] + ["Assets"],
             name=size,
-            line=dict(width=2)
+            line=dict(width=2, color="#3a6b35" if size == "Large (>$10M)" else "#6b9b76" if size == "Medium ($1M-$10M)" else "#a3c9a8")
         ))
     fig_radar.update_layout(
         polar=dict(radialaxis=dict(visible=True, range=[0, max([df_env_990[m].mean() / 1_000_000 for m in metrics]) * 1.2])),
         showlegend=True,
         height=400,
-        margin=dict(l=10, r=10, t=30, b=10)
+        margin=dict(l=10, r=10, t=30, b=10),
+        legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5)
     )
     st.plotly_chart(fig_radar, use_container_width=True)
 
