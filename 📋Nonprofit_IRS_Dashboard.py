@@ -126,3 +126,4 @@ st.sidebar.markdown("""
     The Undivide Project addresses the climate crisis and digital divide, focusing on poor and BIPOC communities.
     We empower communities to create solutions and uplift underserved voices.
 """)
+# Note: No logo is displayed in this script. Ensure Home.py or other modules don't reference a logo.
